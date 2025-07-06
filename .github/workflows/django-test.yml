@@ -46,6 +46,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Grant DB permissions to test user
+      run: |
+        sudo apt-get install -y default-mysql-client
+        mysql -h 127.0.0.1 -u root -proot -e "
+          CREATE USER IF NOT EXISTS 'restaurant_user'@'%' IDENTIFIED BY 'db_password';
+          GRANT ALL PRIVILEGES ON *.* TO 'restaurant_user'@'%';
+          FLUSH PRIVILEGES;
+        "
+
     - name: Wait for MySQL to be ready
       run: |
         for i in {1..10}; do
