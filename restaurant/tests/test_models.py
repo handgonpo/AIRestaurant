@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.core.files.base import ContentFile
 from django.test import TestCase
 
@@ -20,7 +18,8 @@ from restaurant.models import (
 class ArticleModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Article.objects.create(
+        # Article.objects.create(
+        cls.article = Article.objects.create(
             title="테스트 칼럼 제목",
             content="테스트 칼럼 내용",
             preview_image=ContentFile(
@@ -31,8 +30,8 @@ class ArticleModelTest(TestCase):
         )
 
     def test_content(self):
-        article = Article.objects.get(id=1)
-        expected_data = article
+        # article = Article.objects.get(id=1)
+        expected_data = self.article
         self.assertEqual(expected_data.title, "테스트 칼럼 제목")
         self.assertEqual(expected_data.content, "테스트 칼럼 내용")
         self.assertEqual(expected_data.show_at_index, True)
@@ -45,7 +44,8 @@ class ArticleModelTest(TestCase):
 class RestaurantModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Restaurant.objects.create(
+        # Restaurant.objects.create(
+        cls.restaurant = Restaurant.objects.create(
             name="테스트 식당",
             address="서울시 강남구 역삼동 123-456",
             phone="+82212345678",
@@ -58,14 +58,16 @@ class RestaurantModelTest(TestCase):
         )
 
     def test_content(self):
-        restaurant = Restaurant.objects.get(id=1)
-        expected_data = restaurant
+        # restaurant = Restaurant.objects.get(id=1)
+        expected_data = self.restaurant
         self.assertEqual(expected_data.name, "테스트 식당")
         self.assertEqual(expected_data.address, "서울시 강남구 역삼동 123-456")
         self.assertEqual(expected_data.phone, "+82212345678")
         self.assertEqual(expected_data.description, "테스트 식당 설명")
-        self.assertEqual(expected_data.latitude, Decimal("37.12345600000"))
-        self.assertEqual(expected_data.longitude, Decimal("127.12345600000"))
+        # self.assertEqual(expected_data.latitude, Decimal("37.12345600000"))
+        # self.assertEqual(expected_data.longitude, Decimal("127.12345600000"))
+        self.assertAlmostEqual(float(expected_data.latitude), 37.123456)
+        self.assertAlmostEqual(float(expected_data.longitude), 127.123456)
         self.assertEqual(expected_data.rating, 4.5)
         self.assertEqual(expected_data.rating_count, 1_000)
         self.assertEqual(expected_data.is_closed, True)
@@ -132,16 +134,18 @@ class RestaurantMenuModelTest(TestCase):
 class ReviewModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        restaurant = Restaurant.objects.create(name="테스트 식당")
-        Review.objects.create(
-            restaurant=restaurant,
+        # restaurant = Restaurant.objects.create(name="테스트 식당")
+        # Review.objects.create(
+        cls.restaurant = Restaurant.objects.create(name="테스트 식당")
+        cls.review = Review.objects.create(
+            restaurant=cls.restaurant,
             rating=4,
             content="테스트 리뷰 내용",
         )
 
     def test_content(self):
-        review = Review.objects.get(id=1)
-        expected_data = review
+        # review = Review.objects.get(id=1)
+        expected_data = self.review
         self.assertEqual(expected_data.restaurant.name, "테스트 식당")
         self.assertEqual(expected_data.rating, 4)
         self.assertEqual(expected_data.content, "테스트 리뷰 내용")
