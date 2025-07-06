@@ -45,6 +45,7 @@ class RestaurantModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Restaurant.objects.create(
+        # Restaurant.objects.create(
         cls.restaurant = Restaurant.objects.create(
             name="테스트 식당",
             address="서울시 강남구 역삼동 123-456",
