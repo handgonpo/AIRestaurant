@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ SECRET_KEY = "django-insecure-!pdm2(!5b9_oae1-)!m#d8ozdd#wr$%%+x-0ult+oaw6vd@3bm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -76,11 +77,22 @@ WSGI_APPLICATION = "proj.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ.get("DB_NAME", "restaurant_db"),
+        "USER": os.environ.get("DB_USER", "restaurant_user"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "db_password"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "3306"),
+        "OPTIONS": {"charset": "utf8mb4"},
     }
 }
-
+if os.environ.get("TEST"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -122,3 +134,34 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+# Use Amazon S3 for storage for uploaded media files if not debugging
+if os.environ.get("S3_BUCKET"):
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": os.environ.get("S3_BUCKET"),
+                "region_name": os.environ.get("S3_REGION", "ap-northeast-2"),
+                "custom_domain": os.environ.get("S3_CUSTOM_DOMAIN"),
+                "location": "media",
+                "default_acl": "public-read",
+                "querystring_auth": False,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": os.environ.get("S3_BUCKET"),
+                "region_name": os.environ.get("S3_REGION", "ap-northeast-2"),
+                "custom_domain": os.environ.get("S3_CUSTOM_DOMAIN"),
+                "location": "static",
+                "default_acl": "public-read",
+                "querystring_auth": False,
+            },
+        },
+    }
