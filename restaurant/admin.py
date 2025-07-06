@@ -41,7 +41,7 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 
-class ResraurantMenuInline(admin.TabularInline):
+class RestaurantMenuInline(admin.TabularInline):
     model = RestaurantMenu
     extra = 1
 
@@ -76,7 +76,7 @@ class RestaurantAdmin(admin.ModelAdmin):
     search_fields = ["name", "branch_name"]
     list_filter = ["tags"]
     autocomplete_fields = ["tags"]
-    inlines = [ResraurantMenuInline, RestaurantImageInline]
+    inlines = [RestaurantMenuInline, RestaurantImageInline]
 
     # 인스턴스를 생성할때 인라인 표시 안하도록
     def get_inline_instances(self, request, obj=None):
