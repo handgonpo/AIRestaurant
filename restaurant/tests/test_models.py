@@ -20,7 +20,8 @@ from restaurant.models import (
 class ArticleModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Article.objects.create(
+        #Article.objects.create(
+        cls.article = Article.objects.create(
             title="테스트 칼럼 제목",
             content="테스트 칼럼 내용",
             preview_image=ContentFile(
