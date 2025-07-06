@@ -31,8 +31,8 @@ class ArticleModelTest(TestCase):
         )
 
     def test_content(self):
-        article = Article.objects.get(id=1)
-        expected_data = article
+        # article = Article.objects.get(id=1)
+        expected_data = self.article
         self.assertEqual(expected_data.title, "테스트 칼럼 제목")
         self.assertEqual(expected_data.content, "테스트 칼럼 내용")
         self.assertEqual(expected_data.show_at_index, True)
