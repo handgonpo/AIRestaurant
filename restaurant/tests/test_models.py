@@ -46,7 +46,8 @@ class ArticleModelTest(TestCase):
 class RestaurantModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        Restaurant.objects.create(
+        #Restaurant.objects.create(
+        cls.restaurant = Restaurant.objects.create(
             name="테스트 식당",
             address="서울시 강남구 역삼동 123-456",
             phone="+82212345678",
@@ -59,7 +60,8 @@ class RestaurantModelTest(TestCase):
         )
 
     def test_content(self):
-        restaurant = Restaurant.objects.get(id=1)
+        #restaurant = Restaurant.objects.get(id=1)
+        expected_data = self.review
         expected_data = restaurant
         self.assertEqual(expected_data.name, "테스트 식당")
         self.assertEqual(expected_data.address, "서울시 강남구 역삼동 123-456")
@@ -133,15 +135,16 @@ class RestaurantMenuModelTest(TestCase):
 class ReviewModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        restaurant = Restaurant.objects.create(name="테스트 식당")
-        Review.objects.create(
+        cls.restaurant = Restaurant.objects.create(name="테스트 식당")
+        cls.review = Review.objects.create(
             restaurant=restaurant,
             rating=4,
             content="테스트 리뷰 내용",
         )
 
     def test_content(self):
-        review = Review.objects.get(id=1)
+        # review = Review.objects.get(id=1)
+        expected_data = self.review
         expected_data = review
         self.assertEqual(expected_data.restaurant.name, "테스트 식당")
         self.assertEqual(expected_data.rating, 4)
