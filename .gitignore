@@ -8,6 +8,7 @@ __pycache__
 .coverage
 .coverage.*
 db.sqlite3
+.env
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
