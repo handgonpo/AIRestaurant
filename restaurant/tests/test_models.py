@@ -19,20 +19,26 @@ class ArticleModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         # Article.objects.create(
-        cls.article = Article.objects.create(
-            title="테스트 칼럼 제목",
-            content="테스트 칼럼 내용",
-            preview_image=ContentFile(
-                b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", name="test-image.png"
-            ),
-            show_at_index=True,
-            is_published=True,
+        cls.article = (
+            Article.objects.create(  # Article 객체를 생성해서 cls.article에 저장
+                title="테스트 칼럼 제목",
+                content="테스트 칼럼 내용",
+                preview_image=ContentFile(
+                    b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a", name="test-image.png"
+                ),
+                show_at_index=True,
+                is_published=True,
+            )
         )
 
-    def test_content(self):
+    def test_content(
+        self,
+    ):  # Article 모델의 각 필드가 정확히 저장되었는지 확인하는 테스트 함수
         # article = Article.objects.get(id=1)
         expected_data = self.article
         self.assertEqual(expected_data.title, "테스트 칼럼 제목")
+        # a == b인지 비교하고, 같지 않으면 테스트 실패(fail)로 처리
+
         self.assertEqual(expected_data.content, "테스트 칼럼 내용")
         self.assertEqual(expected_data.show_at_index, True)
         self.assertEqual(expected_data.is_published, True)
@@ -103,7 +109,7 @@ class RestaurantImageModelTest(TestCase):
         RestaurantImage.objects.create(
             restaurant=restaurant,
             image=ContentFile(
-                b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", name="test-image.png"
+                b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a", name="test-image.png"
             ),
         )
 
@@ -164,7 +170,7 @@ class ReviewImageModelTest(TestCase):
         ReviewImage.objects.create(
             review=review,
             image=ContentFile(
-                b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", name="test-image.png"
+                b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a", name="test-image.png"
             ),
         )
 

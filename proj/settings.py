@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -71,21 +75,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "proj.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DB_NAME", "restaurant_db"),
-        "USER": os.environ.get("DB_USER", "restaurant_user"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "db_password"),
-        "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
-        "PORT": os.environ.get("DB_PORT", "3306"),
-        "OPTIONS": {"charset": "utf8mb4"},
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
+        "OPTIONS": {
+            "charset": "utf8mb4",  # 문자셋을 utf8mb4 로 지정
+            "init_command": "SET NAMES utf8mb4",  # 커넥션 시 SET NAMES utf8mb4 실행
+        },
     }
 }
+
 if os.environ.get("TEST"):
     DATABASES = {
         "default": {
