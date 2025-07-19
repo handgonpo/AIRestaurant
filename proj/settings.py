@@ -27,7 +27,7 @@ DB_NAME = os.environ.get("DB_NAME")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key-for-learning")
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 if not SECRET_KEY:
     raise ImproperlyConfigured("The SECRET_KEY setting must not be empty.")
@@ -203,7 +203,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 if AWS_STORAGE_BUCKET_NAME:
     AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ap-northeast-2")
-    # Domain for S3 (e.g., mybucket.s3.ap-northeast-2.amazonaws.com)
     AWS_S3_CUSTOM_DOMAIN = os.getenv(
         "AWS_S3_CUSTOM_DOMAIN",
         f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com",
@@ -211,11 +210,9 @@ if AWS_STORAGE_BUCKET_NAME:
 
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
-
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 else:
-    # Local fallback
     STATIC_URL = "/static/"
     MEDIA_URL = "/media/"
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
