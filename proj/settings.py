@@ -83,6 +83,7 @@ WSGI_APPLICATION = "proj.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# 개발시
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.mysql",
@@ -101,18 +102,20 @@ WSGI_APPLICATION = "proj.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DB_NAME", "default_db"),
-        "USER": os.environ.get("DB_USER", "default_user"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "default_password"),
-        "HOST": os.environ.get("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "3306"),
+        # EB에서 RDS를 붙이면 자동으로 설정되는 RDS_* envvars를 우선 사용
+        "NAME": os.getenv("RDS_DB_NAME", os.getenv("DB_NAME", "default_db")),
+        "USER": os.getenv("RDS_USERNAME", os.getenv("DB_USER", "default_user")),
+        "PASSWORD": os.getenv(
+            "RDS_PASSWORD", os.getenv("DB_PASSWORD", "default_password")
+        ),
+        "HOST": os.getenv("RDS_HOSTNAME", os.getenv("DB_HOST", "localhost")),
+        "PORT": os.getenv("RDS_PORT", os.getenv("DB_PORT", "3306")),
         "OPTIONS": {
             "charset": "utf8mb4",
             "init_command": "SET NAMES utf8mb4",
         },
     }
 }
-
 
 if os.environ.get("TEST"):
     DATABASES = {
