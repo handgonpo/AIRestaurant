@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
+# load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
 DB_NAME = os.environ.get("DB_NAME")
 
 # Quick-start development settings - unsuitable for production
@@ -27,7 +27,7 @@ DB_NAME = os.environ.get("DB_NAME")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key-for-learning")
-SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-development-key")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 if not SECRET_KEY:
     raise ImproperlyConfigured("The SECRET_KEY setting must not be empty.")
@@ -35,7 +35,7 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
