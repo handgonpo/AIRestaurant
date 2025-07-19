@@ -102,7 +102,6 @@ WSGI_APPLICATION = "proj.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        # EB에서 RDS를 붙이면 자동으로 설정되는 RDS_* envvars를 우선 사용
         "NAME": os.getenv("RDS_DB_NAME", os.getenv("DB_NAME", "default_db")),
         "USER": os.getenv("RDS_USERNAME", os.getenv("DB_USER", "default_user")),
         "PASSWORD": os.getenv(
@@ -202,48 +201,21 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ap-northeast-2")
-AWS_S3_CUSTOM_DOMAIN = os.getenv(
-    "AWS_S3_CUSTOM_DOMAIN",
-    f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com",
-)
-
 if AWS_STORAGE_BUCKET_NAME:
-    # Use S3Boto3 storage backend
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ap-northeast-2")
+    # Domain for S3 (e.g., mybucket.s3.ap-northeast-2.amazonaws.com)
+    AWS_S3_CUSTOM_DOMAIN = os.getenv(
+        "AWS_S3_CUSTOM_DOMAIN",
+        f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com",
+    )
 
-    # Optional STORAGES dict for Django>=4.2
-    STORAGES = {
-        "default": {
-            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-            "OPTIONS": {
-                "bucket_name": AWS_STORAGE_BUCKET_NAME,
-                "region_name": AWS_S3_REGION_NAME,
-                "custom_domain": AWS_S3_CUSTOM_DOMAIN,
-                "location": "media",
-                "default_acl": "public-read",
-                "querystring_auth": False,
-            },
-        },
-        "staticfiles": {
-            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
-            "OPTIONS": {
-                "bucket_name": AWS_STORAGE_BUCKET_NAME,
-                "region_name": AWS_S3_REGION_NAME,
-                "custom_domain": AWS_S3_CUSTOM_DOMAIN,
-                "location": "static",
-                "default_acl": "public-read",
-                "querystring_auth": False,
-            },
-        },
-    }
-
-    # URLs served from S3
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 else:
-    # Local static/media fallback
+    # Local fallback
     STATIC_URL = "/static/"
     MEDIA_URL = "/media/"
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
