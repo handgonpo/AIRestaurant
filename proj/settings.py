@@ -13,13 +13,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+# ❌ 아래 2줄은 제거합니다. EB에서는 .env를 인식하지 않습니다.
+# from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
-DB_NAME = os.environ.get("DB_NAME")
+# load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
+# DB_NAME = os.environ.get("DB_NAME")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -78,20 +79,36 @@ WSGI_APPLICATION = "proj.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": os.environ.get("DB_NAME"),
+#         "USER": os.environ.get("DB_USER"),
+#         "PASSWORD": os.environ.get("DB_PASSWORD"),
+#         "HOST": os.environ.get("DB_HOST"),
+#         "PORT": os.environ.get("DB_PORT"),
+#         "OPTIONS": {
+#             "charset": "utf8mb4",  # 문자셋을 utf8mb4 로 지정
+#             "init_command": "SET NAMES utf8mb4",  # 커넥션 시 SET NAMES utf8mb4 실행
+#         },
+#     }
+# }
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT"),
+        "NAME": os.environ.get("DB_NAME", "default_db"),
+        "USER": os.environ.get("DB_USER", "default_user"),
+        "PASSWORD": os.environ.get("DB_PASSWORD", "default_password"),
+        "HOST": os.environ.get("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "3306"),
         "OPTIONS": {
-            "charset": "utf8mb4",  # 문자셋을 utf8mb4 로 지정
-            "init_command": "SET NAMES utf8mb4",  # 커넥션 시 SET NAMES utf8mb4 실행
+            "charset": "utf8mb4",
+            "init_command": "SET NAMES utf8mb4",
         },
     }
 }
+
 
 if os.environ.get("TEST"):
     DATABASES = {
