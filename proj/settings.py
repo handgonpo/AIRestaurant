@@ -14,19 +14,19 @@ import os
 from pathlib import Path
 
 # ❌ 아래 2줄은 제거합니다. EB에서는 .env를 인식하지 않습니다.
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
-# DB_NAME = os.environ.get("DB_NAME")
+load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
+DB_NAME = os.environ.get("DB_NAME")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key-for-learning")
+# SECRET_KEY = os.getenv("SECRET_KEY", "insecure-default-key-for-learning")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
