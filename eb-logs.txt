@@ -1,0 +1,4 @@
+Retrieving logs...
+Logs were saved to /home/youjung/AIRestaurant/.elasticbeanstalk/logs/250719_222622
+Logs were saved to /home/youjung/AIRestaurant/.elasticbeanstalk/logs/250719_222622
+Updated symlink at /home/youjung/AIRestaurant/.elasticbeanstalk/logs/latest
