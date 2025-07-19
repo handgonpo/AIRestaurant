@@ -85,11 +85,21 @@ git commit -m "Initial Commit"
 ```zsh
 eb init
 
+# 설정내용
 eb create \
  --vpc.id VPCID \
- --vpc.securitygroups 시큐리티그룹ID \
+ --vpc.securitygroups 보안그룹ID \
  --vpc.ec2subnets 서브넷ID,서브넷ID... \
- --envvars PRODUCTION=1,DB_NAME=product_db,DB_USER=db_user,DB_PASSWORD=비밀번호,DB_HOST=DB엔드포인트,S3_BUCKET=버킷이름 \
+ --envvars DB_NAME=product_db,DB_USER=db_user,DB_PASSWORD=마스타암호,DB_HOST=DB엔드포인트,S3_BUCKET=버킷이름 \
  --vpc.elbpublic \
  --vpc.publicip
+
+
+#  eb create \
+#  --vpc.id vpc-078a5406b51b61a90 \
+#  --vpc.securitygroups sg-0fa6d2c29e9cb8f63 \
+#  --vpc.ec2subnets subnet-0aef092ddd766bb5f,subnet-012c0742f20a693d3,subnet-0c9149f519d6231e1,subnet-075377c222032771e \
+#  --envvars DB_NAME=restaurant_db,DB_USER=admin,DB_PASSWORD=4nmfmoX7QBdZMHKFTNQU,DB_HOST=airest-d.cfwgaqsu2fpk.ap-northeast-2.rds.amazonaws.com,S3_BUCKET=airest-dev \
+#  --vpc.elbpublic \
+#  --vpc.publicip
 ```
