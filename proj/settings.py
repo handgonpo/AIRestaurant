@@ -170,28 +170,72 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 # Use Amazon S3 for storage for uploaded media files if not debugging
-if os.environ.get("S3_BUCKET"):
+# S3_BUCKET = os.getenv("AWS_STORAGE_BUCKET_NAME")
+# if os.environ.get("S3_BUCKET"):
+#     STORAGES = {
+#         "default": {
+#             "BACKEND": "storages.backends.s3.S3Storage",
+#             "OPTIONS": {
+#                 "bucket_name": os.environ.get("S3_BUCKET"),
+#                 "region_name": os.environ.get("S3_REGION", "ap-northeast-2"),
+#                 "custom_domain": os.environ.get("S3_CUSTOM_DOMAIN"),
+#                 "location": "media",
+#                 "default_acl": "public-read",
+#                 "querystring_auth": False,
+#             },
+#         },
+#         "staticfiles": {
+#             "BACKEND": "storages.backends.s3.S3Storage",
+#             "OPTIONS": {
+#                 "bucket_name": os.environ.get("S3_BUCKET"),
+#                 "region_name": os.environ.get("S3_REGION", "ap-northeast-2"),
+#                 "custom_domain": os.environ.get("S3_CUSTOM_DOMAIN"),
+#                 "location": "static",
+#                 "default_acl": "public-read",
+#                 "querystring_auth": False,
+#             },
+#         },
+#     }
+
+
+S3_BUCKET = os.getenv("AWS_STORAGE_BUCKET_NAME")
+if S3_BUCKET:
+    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ap-northeast-2")
+    AWS_S3_CUSTOM_DOMAIN = os.getenv(
+        "AWS_S3_CUSTOM_DOMAIN", f"{S3_BUCKET}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+    )
+
+    # Flask‑styles STORAGES 설정 (Django 4.2+)
     STORAGES = {
         "default": {
-            "BACKEND": "storages.backends.s3.S3Storage",
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
-                "bucket_name": os.environ.get("S3_BUCKET"),
-                "region_name": os.environ.get("S3_REGION", "ap-northeast-2"),
-                "custom_domain": os.environ.get("S3_CUSTOM_DOMAIN"),
+                "bucket_name": S3_BUCKET,
+                "region_name": AWS_S3_REGION_NAME,
+                "custom_domain": AWS_S3_CUSTOM_DOMAIN,
                 "location": "media",
                 "default_acl": "public-read",
                 "querystring_auth": False,
             },
         },
         "staticfiles": {
-            "BACKEND": "storages.backends.s3.S3Storage",
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             "OPTIONS": {
-                "bucket_name": os.environ.get("S3_BUCKET"),
-                "region_name": os.environ.get("S3_REGION", "ap-northeast-2"),
-                "custom_domain": os.environ.get("S3_CUSTOM_DOMAIN"),
+                "bucket_name": S3_BUCKET,
+                "region_name": AWS_S3_REGION_NAME,
+                "custom_domain": AWS_S3_CUSTOM_DOMAIN,
                 "location": "static",
                 "default_acl": "public-read",
                 "querystring_auth": False,
             },
         },
     }
+
+    # URL 경로도 S3 커스텀 도메인으로 지정
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
+else:
+    # 로컬 서빙 fallback
+    STATIC_URL = "/static/"
+    MEDIA_URL = "/media/"
