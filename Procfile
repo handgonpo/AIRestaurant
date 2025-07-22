@@ -1,1 +1,1 @@
-web: gunicorn proj.wsgi:application --bind :8000
+web: gunicorn proj.wsgi:application --bind 127.0.0.1:8000
